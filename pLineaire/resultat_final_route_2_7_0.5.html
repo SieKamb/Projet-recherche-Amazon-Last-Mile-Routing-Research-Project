@@ -1,0 +1,222 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 600px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "BJ(2342.6)", "label": "BJ(2342.6)", "shape": "dot"}, {"color": "#97c2fc", "id": "WN(2482.2)", "label": "WN(2482.2)", "shape": "dot"}, {"color": "#97c2fc", "id": "OF(3714.75)", "label": "OF(3714.75)", "shape": "dot"}, {"color": "#97c2fc", "id": "YB(3754.65)", "label": "YB(3754.65)", "shape": "dot"}, {"color": "#97c2fc", "id": "YX(2512.3)", "label": "YX(2512.3)", "shape": "dot"}, {"color": "#97c2fc", "id": "WW(3606.45)", "label": "WW(3606.45)", "shape": "dot"}, {"color": "#97c2fc", "id": "XD(4245.43)", "label": "XD(4245.43)", "shape": "dot"}, {"color": "#97c2fc", "id": "NZ(4275.33)", "label": "NZ(4275.33)", "shape": "dot"}, {"color": "#97c2fc", "id": "HR(3788.25)", "label": "HR(3788.25)", "shape": "dot"}, {"color": "#97c2fc", "id": "AG(3819.25)", "label": "AG(3819.25)", "shape": "dot"}, {"color": "#97c2fc", "id": "GC(3848.15)", "label": "GC(3848.15)", "shape": "dot"}, {"color": "#97c2fc", "id": "HN(3867.35)", "label": "HN(3867.35)", "shape": "dot"}, {"color": "#97c2fc", "id": "DG(3878.25)", "label": "DG(3878.25)", "shape": "dot"}, {"color": "#97c2fc", "id": "FL(3896.55)", "label": "FL(3896.55)", "shape": "dot"}, {"color": "#97c2fc", "id": "TA(4000.53)", "label": "TA(4000.53)", "shape": "dot"}, {"color": "#97c2fc", "id": "UR(4013.43)", "label": "UR(4013.43)", "shape": "dot"}, {"color": "#97c2fc", "id": "RR(4080.63)", "label": "RR(4080.63)", "shape": "dot"}, {"color": "#97c2fc", "id": "AN(4140.43)", "label": "AN(4140.43)", "shape": "dot"}, {"color": "#97c2fc", "id": "QQ(4163.93)", "label": "QQ(4163.93)", "shape": "dot"}, {"color": "#97c2fc", "id": "OC(4209.53)", "label": "OC(4209.53)", "shape": "dot"}, {"color": "#97c2fc", "id": "XE(4572.0)", "label": "XE(4572.0)", "shape": "dot"}, {"color": "#97c2fc", "id": "SC(4620.5)", "label": "SC(4620.5)", "shape": "dot"}, {"color": "#97c2fc", "id": "CB(4309.43)", "label": "CB(4309.43)", "shape": "dot"}, {"color": "#97c2fc", "id": "KC(4354.83)", "label": "KC(4354.83)", "shape": "dot"}, {"color": "#97c2fc", "id": "CH(4525.6)", "label": "CH(4525.6)", "shape": "dot"}, {"color": "#97c2fc", "id": "NB(5403.27)", "label": "NB(5403.27)", "shape": "dot"}, {"color": "#97c2fc", "id": "DI(5462.27)", "label": "DI(5462.27)", "shape": "dot"}, {"color": "#97c2fc", "id": "GI(4645.2)", "label": "GI(4645.2)", "shape": "dot"}, {"color": "#97c2fc", "id": "AS(4697.6)", "label": "AS(4697.6)", "shape": "dot"}, {"color": "#97c2fc", "id": "RM(4710.1)", "label": "RM(4710.1)", "shape": "dot"}, {"color": "#97c2fc", "id": "OZ(4728.3)", "label": "OZ(4728.3)", "shape": "dot"}, {"color": "#97c2fc", "id": "ZL(4781.0)", "label": "ZL(4781.0)", "shape": "dot"}, {"color": "#97c2fc", "id": "YM(4802.0)", "label": "YM(4802.0)", "shape": "dot"}, {"color": "#97c2fc", "id": "BV(4809.3)", "label": "BV(4809.3)", "shape": "dot"}, {"color": "#97c2fc", "id": "OB(5283.47)", "label": "OB(5283.47)", "shape": "dot"}, {"color": "#97c2fc", "id": "CO(5309.37)", "label": "CO(5309.37)", "shape": "dot"}, {"color": "#97c2fc", "id": "XM(5319.77)", "label": "XM(5319.77)", "shape": "dot"}, {"color": "#97c2fc", "id": "PF(5361.97)", "label": "PF(5361.97)", "shape": "dot"}, {"color": "#97c2fc", "id": "ZS(5943.6)", "label": "ZS(5943.6)", "shape": "dot"}, {"color": "#97c2fc", "id": "RZ(5975.4)", "label": "RZ(5975.4)", "shape": "dot"}, {"color": "#97c2fc", "id": "QC(5482.17)", "label": "QC(5482.17)", "shape": "dot"}, {"color": "#97c2fc", "id": "ZF(5517.27)", "label": "ZF(5517.27)", "shape": "dot"}, {"color": "#97c2fc", "id": "GN(5571.37)", "label": "GN(5571.37)", "shape": "dot"}, {"color": "#97c2fc", "id": "KK(5586.17)", "label": "KK(5586.17)", "shape": "dot"}, {"color": "#97c2fc", "id": "XZ(5594.87)", "label": "XZ(5594.87)", "shape": "dot"}, {"color": "#97c2fc", "id": "QS(5776.7)", "label": "QS(5776.7)", "shape": "dot"}, {"color": "#97c2fc", "id": "DF(5781.8)", "label": "DF(5781.8)", "shape": "dot"}, {"color": "#97c2fc", "id": "NC(5827.8)", "label": "NC(5827.8)", "shape": "dot"}, {"color": "#97c2fc", "id": "EH(5866.3)", "label": "EH(5866.3)", "shape": "dot"}, {"color": "#97c2fc", "id": "VU(5900.9)", "label": "VU(5900.9)", "shape": "dot"}, {"color": "#97c2fc", "id": "LD(6604.0)", "label": "LD(6604.0)", "shape": "dot"}, {"color": "#97c2fc", "id": "XV(6654.5)", "label": "XV(6654.5)", "shape": "dot"}, {"color": "#97c2fc", "id": "HZ(6068.4)", "label": "HZ(6068.4)", "shape": "dot"}, {"color": "#97c2fc", "id": "ZV(6086.6)", "label": "ZV(6086.6)", "shape": "dot"}, {"color": "#97c2fc", "id": "NM(6099.8)", "label": "NM(6099.8)", "shape": "dot"}, {"color": "#97c2fc", "id": "BF(6555.9)", "label": "BF(6555.9)", "shape": "dot"}, {"color": "#97c2fc", "id": "YJ(7429.5)", "label": "YJ(7429.5)", "shape": "dot"}, {"color": "#97c2fc", "id": "ER(7458.5)", "label": "ER(7458.5)", "shape": "dot"}, {"color": "#97c2fc", "id": "QU(6734.8)", "label": "QU(6734.8)", "shape": "dot"}, {"color": "#97c2fc", "id": "CG(6749.2)", "label": "CG(6749.2)", "shape": "dot"}, {"color": "#97c2fc", "id": "EJ(6775.7)", "label": "EJ(6775.7)", "shape": "dot"}, {"color": "#97c2fc", "id": "BA(6843.7)", "label": "BA(6843.7)", "shape": "dot"}, {"color": "#97c2fc", "id": "WP(6967.3)", "label": "WP(6967.3)", "shape": "dot"}, {"color": "#97c2fc", "id": "QA(7410.6)", "label": "QA(7410.6)", "shape": "dot"}, {"color": "#97c2fc", "id": "HG(7419.7)", "label": "HG(7419.7)", "shape": "dot"}, {"color": "#97c2fc", "id": "WX(8490.86)", "label": "WX(8490.86)", "shape": "dot"}, {"color": "#97c2fc", "id": "FM(8548.46)", "label": "FM(8548.46)", "shape": "dot"}, {"color": "#97c2fc", "id": "PC(7475.4)", "label": "PC(7475.4)", "shape": "dot"}, {"color": "#97c2fc", "id": "BY(7487.9)", "label": "BY(7487.9)", "shape": "dot"}, {"color": "#97c2fc", "id": "XT(7499.4)", "label": "XT(7499.4)", "shape": "dot"}, {"color": "#97c2fc", "id": "AC(7563.8)", "label": "AC(7563.8)", "shape": "dot"}, {"color": "#97c2fc", "id": "VX(8422.26)", "label": "VX(8422.26)", "shape": "dot"}, {"color": "#97c2fc", "id": "TM(8461.16)", "label": "TM(8461.16)", "shape": "dot"}, {"color": "#97c2fc", "id": "PV(8484.66)", "label": "PV(8484.66)", "shape": "dot"}, {"color": "#97c2fc", "id": "BP(9906.0)", "label": "BP(9906.0)", "shape": "dot"}, {"color": "#97c2fc", "id": "AE(9955.6)", "label": "AE(9955.6)", "shape": "dot"}, {"color": "#97c2fc", "id": "DR(8647.46)", "label": "DR(8647.46)", "shape": "dot"}, {"color": "#97c2fc", "id": "PG(8659.46)", "label": "PG(8659.46)", "shape": "dot"}, {"color": "#97c2fc", "id": "DH(8669.96)", "label": "DH(8669.96)", "shape": "dot"}, {"color": "#97c2fc", "id": "MC(8711.46)", "label": "MC(8711.46)", "shape": "dot"}, {"color": "#97c2fc", "id": "LI(8738.76)", "label": "LI(8738.76)", "shape": "dot"}, {"color": "#97c2fc", "id": "HC(9786.0)", "label": "HC(9786.0)", "shape": "dot"}, {"color": "#97c2fc", "id": "UH(9822.5)", "label": "UH(9822.5)", "shape": "dot"}, {"color": "#97c2fc", "id": "DQ(9834.1)", "label": "DQ(9834.1)", "shape": "dot"}, {"color": "#97c2fc", "id": "NO(11887.2)", "label": "NO(11887.2)", "shape": "dot"}, {"color": "#97c2fc", "id": "HY(11919.7)", "label": "HY(11919.7)", "shape": "dot"}, {"color": "#97c2fc", "id": "TN(9990.3)", "label": "TN(9990.3)", "shape": "dot"}, {"color": "#97c2fc", "id": "MV(10003.1)", "label": "MV(10003.1)", "shape": "dot"}, {"color": "#97c2fc", "id": "XX(10044.5)", "label": "XX(10044.5)", "shape": "dot"}, {"color": "#97c2fc", "id": "ON(10128.7)", "label": "ON(10128.7)", "shape": "dot"}, {"color": "#97c2fc", "id": "RC(10147.9)", "label": "RC(10147.9)", "shape": "dot"}, {"color": "#97c2fc", "id": "WD(11728.7)", "label": "WD(11728.7)", "shape": "dot"}, {"color": "#97c2fc", "id": "YK(11757.9)", "label": "YK(11757.9)", "shape": "dot"}, {"color": "#97c2fc", "id": "KI(11819.1)", "label": "KI(11819.1)", "shape": "dot"}, {"color": "#97c2fc", "id": "VJ(11843.2)", "label": "VJ(11843.2)", "shape": "dot"}, {"color": "#97c2fc", "id": "UJ(11857.6)", "label": "UJ(11857.6)", "shape": "dot"}, {"color": "#97c2fc", "id": "TX(11879.3)", "label": "TX(11879.3)", "shape": "dot"}, {"color": "#97c2fc", "id": "PQ(14859.0)", "label": "PQ(14859.0)", "shape": "dot"}, {"color": "#97c2fc", "id": "SK(14930.5)", "label": "SK(14930.5)", "shape": "dot"}, {"color": "#97c2fc", "id": "GR(11931.2)", "label": "GR(11931.2)", "shape": "dot"}, {"color": "#97c2fc", "id": "NQ(11960.2)", "label": "NQ(11960.2)", "shape": "dot"}, {"color": "#97c2fc", "id": "UW(14760.5)", "label": "UW(14760.5)", "shape": "dot"}, {"color": "#97c2fc", "id": "SA(14830.6)", "label": "SA(14830.6)", "shape": "dot"}, {"color": "#97c2fc", "id": "IB(14851.0)", "label": "IB(14851.0)", "shape": "dot"}, {"color": "#97c2fc", "id": "NW(14998.2)", "label": "NW(14998.2)", "shape": "dot"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "BJ(2342.6)", "label": "139.6", "title": "Co\u00fbt: 139.6", "to": "WN(2482.2)"}, {"arrows": "to", "from": "OF(3714.75)", "label": "39.9", "title": "Co\u00fbt: 39.9", "to": "YB(3754.65)"}, {"arrows": "to", "from": "WN(2482.2)", "label": "30.1", "title": "Co\u00fbt: 30.1", "to": "YX(2512.3)"}, {"arrows": "to", "from": "YX(2512.3)", "label": "58.9", "title": "Co\u00fbt: 58.9", "to": "WW(3606.45)"}, {"arrows": "to", "from": "WW(3606.45)", "label": "108.3", "title": "Co\u00fbt: 108.3", "to": "OF(3714.75)"}, {"arrows": "to", "from": "XD(4245.43)", "label": "29.9", "title": "Co\u00fbt: 29.9", "to": "NZ(4275.33)"}, {"arrows": "to", "from": "YB(3754.65)", "label": "33.6", "title": "Co\u00fbt: 33.6", "to": "HR(3788.25)"}, {"arrows": "to", "from": "HR(3788.25)", "label": "31.0", "title": "Co\u00fbt: 31.0", "to": "AG(3819.25)"}, {"arrows": "to", "from": "AG(3819.25)", "label": "28.9", "title": "Co\u00fbt: 28.9", "to": "GC(3848.15)"}, {"arrows": "to", "from": "GC(3848.15)", "label": "19.2", "title": "Co\u00fbt: 19.2", "to": "HN(3867.35)"}, {"arrows": "to", "from": "HN(3867.35)", "label": "10.9", "title": "Co\u00fbt: 10.9", "to": "DG(3878.25)"}, {"arrows": "to", "from": "DG(3878.25)", "label": "18.3", "title": "Co\u00fbt: 18.3", "to": "FL(3896.55)"}, {"arrows": "to", "from": "FL(3896.55)", "label": "24.6", "title": "Co\u00fbt: 24.6", "to": "TA(4000.53)"}, {"arrows": "to", "from": "TA(4000.53)", "label": "12.9", "title": "Co\u00fbt: 12.9", "to": "UR(4013.43)"}, {"arrows": "to", "from": "UR(4013.43)", "label": "67.2", "title": "Co\u00fbt: 67.2", "to": "RR(4080.63)"}, {"arrows": "to", "from": "RR(4080.63)", "label": "59.8", "title": "Co\u00fbt: 59.8", "to": "AN(4140.43)"}, {"arrows": "to", "from": "AN(4140.43)", "label": "23.5", "title": "Co\u00fbt: 23.5", "to": "QQ(4163.93)"}, {"arrows": "to", "from": "QQ(4163.93)", "label": "45.6", "title": "Co\u00fbt: 45.6", "to": "OC(4209.53)"}, {"arrows": "to", "from": "OC(4209.53)", "label": "35.9", "title": "Co\u00fbt: 35.9", "to": "XD(4245.43)"}, {"arrows": "to", "from": "XE(4572.0)", "label": "48.5", "title": "Co\u00fbt: 48.5", "to": "SC(4620.5)"}, {"arrows": "to", "from": "NZ(4275.33)", "label": "34.1", "title": "Co\u00fbt: 34.1", "to": "CB(4309.43)"}, {"arrows": "to", "from": "CB(4309.43)", "label": "45.4", "title": "Co\u00fbt: 45.4", "to": "KC(4354.83)"}, {"arrows": "to", "from": "KC(4354.83)", "label": "45.9", "title": "Co\u00fbt: 45.9", "to": "CH(4525.6)"}, {"arrows": "to", "from": "CH(4525.6)", "label": "46.4", "title": "Co\u00fbt: 46.4", "to": "XE(4572.0)"}, {"arrows": "to", "from": "NB(5403.27)", "label": "59.0", "title": "Co\u00fbt: 59.0", "to": "DI(5462.27)"}, {"arrows": "to", "from": "SC(4620.5)", "label": "24.7", "title": "Co\u00fbt: 24.7", "to": "GI(4645.2)"}, {"arrows": "to", "from": "GI(4645.2)", "label": "52.4", "title": "Co\u00fbt: 52.4", "to": "AS(4697.6)"}, {"arrows": "to", "from": "AS(4697.6)", "label": "12.5", "title": "Co\u00fbt: 12.5", "to": "RM(4710.1)"}, {"arrows": "to", "from": "RM(4710.1)", "label": "18.2", "title": "Co\u00fbt: 18.2", "to": "OZ(4728.3)"}, {"arrows": "to", "from": "OZ(4728.3)", "label": "52.7", "title": "Co\u00fbt: 52.7", "to": "ZL(4781.0)"}, {"arrows": "to", "from": "ZL(4781.0)", "label": "21.0", "title": "Co\u00fbt: 21.0", "to": "YM(4802.0)"}, {"arrows": "to", "from": "YM(4802.0)", "label": "7.3", "title": "Co\u00fbt: 7.3", "to": "BV(4809.3)"}, {"arrows": "to", "from": "BV(4809.3)", "label": "36.4", "title": "Co\u00fbt: 36.4", "to": "OB(5283.47)"}, {"arrows": "to", "from": "OB(5283.47)", "label": "25.9", "title": "Co\u00fbt: 25.9", "to": "CO(5309.37)"}, {"arrows": "to", "from": "CO(5309.37)", "label": "10.4", "title": "Co\u00fbt: 10.4", "to": "XM(5319.77)"}, {"arrows": "to", "from": "XM(5319.77)", "label": "42.2", "title": "Co\u00fbt: 42.2", "to": "PF(5361.97)"}, {"arrows": "to", "from": "PF(5361.97)", "label": "41.3", "title": "Co\u00fbt: 41.3", "to": "NB(5403.27)"}, {"arrows": "to", "from": "ZS(5943.6)", "label": "31.8", "title": "Co\u00fbt: 31.8", "to": "RZ(5975.4)"}, {"arrows": "to", "from": "DI(5462.27)", "label": "19.9", "title": "Co\u00fbt: 19.9", "to": "QC(5482.17)"}, {"arrows": "to", "from": "QC(5482.17)", "label": "35.1", "title": "Co\u00fbt: 35.1", "to": "ZF(5517.27)"}, {"arrows": "to", "from": "ZF(5517.27)", "label": "54.1", "title": "Co\u00fbt: 54.1", "to": "GN(5571.37)"}, {"arrows": "to", "from": "GN(5571.37)", "label": "14.8", "title": "Co\u00fbt: 14.8", "to": "KK(5586.17)"}, {"arrows": "to", "from": "KK(5586.17)", "label": "8.7", "title": "Co\u00fbt: 8.7", "to": "XZ(5594.87)"}, {"arrows": "to", "from": "XZ(5594.87)", "label": "4.9", "title": "Co\u00fbt: 4.9", "to": "QS(5776.7)"}, {"arrows": "to", "from": "QS(5776.7)", "label": "5.1", "title": "Co\u00fbt: 5.1", "to": "DF(5781.8)"}, {"arrows": "to", "from": "DF(5781.8)", "label": "46.0", "title": "Co\u00fbt: 46.0", "to": "NC(5827.8)"}, {"arrows": "to", "from": "NC(5827.8)", "label": "38.5", "title": "Co\u00fbt: 38.5", "to": "EH(5866.3)"}, {"arrows": "to", "from": "EH(5866.3)", "label": "34.6", "title": "Co\u00fbt: 34.6", "to": "VU(5900.9)"}, {"arrows": "to", "from": "VU(5900.9)", "label": "42.7", "title": "Co\u00fbt: 42.7", "to": "ZS(5943.6)"}, {"arrows": "to", "from": "LD(6604.0)", "label": "50.5", "title": "Co\u00fbt: 50.5", "to": "XV(6654.5)"}, {"arrows": "to", "from": "RZ(5975.4)", "label": "93.0", "title": "Co\u00fbt: 93.0", "to": "HZ(6068.4)"}, {"arrows": "to", "from": "HZ(6068.4)", "label": "18.2", "title": "Co\u00fbt: 18.2", "to": "ZV(6086.6)"}, {"arrows": "to", "from": "ZV(6086.6)", "label": "13.2", "title": "Co\u00fbt: 13.2", "to": "NM(6099.8)"}, {"arrows": "to", "from": "NM(6099.8)", "label": "51.3", "title": "Co\u00fbt: 51.3", "to": "BF(6555.9)"}, {"arrows": "to", "from": "BF(6555.9)", "label": "48.1", "title": "Co\u00fbt: 48.1", "to": "LD(6604.0)"}, {"arrows": "to", "from": "YJ(7429.5)", "label": "29.0", "title": "Co\u00fbt: 29.0", "to": "ER(7458.5)"}, {"arrows": "to", "from": "XV(6654.5)", "label": "80.3", "title": "Co\u00fbt: 80.3", "to": "QU(6734.8)"}, {"arrows": "to", "from": "QU(6734.8)", "label": "14.4", "title": "Co\u00fbt: 14.4", "to": "CG(6749.2)"}, {"arrows": "to", "from": "CG(6749.2)", "label": "26.5", "title": "Co\u00fbt: 26.5", "to": "EJ(6775.7)"}, {"arrows": "to", "from": "EJ(6775.7)", "label": "68.0", "title": "Co\u00fbt: 68.0", "to": "BA(6843.7)"}, {"arrows": "to", "from": "BA(6843.7)", "label": "123.6", "title": "Co\u00fbt: 123.6", "to": "WP(6967.3)"}, {"arrows": "to", "from": "WP(6967.3)", "label": "22.3", "title": "Co\u00fbt: 22.3", "to": "QA(7410.6)"}, {"arrows": "to", "from": "QA(7410.6)", "label": "9.1", "title": "Co\u00fbt: 9.1", "to": "HG(7419.7)"}, {"arrows": "to", "from": "HG(7419.7)", "label": "9.8", "title": "Co\u00fbt: 9.8", "to": "YJ(7429.5)"}, {"arrows": "to", "from": "WX(8490.86)", "label": "57.6", "title": "Co\u00fbt: 57.6", "to": "FM(8548.46)"}, {"arrows": "to", "from": "ER(7458.5)", "label": "16.9", "title": "Co\u00fbt: 16.9", "to": "PC(7475.4)"}, {"arrows": "to", "from": "PC(7475.4)", "label": "12.5", "title": "Co\u00fbt: 12.5", "to": "BY(7487.9)"}, {"arrows": "to", "from": "BY(7487.9)", "label": "11.5", "title": "Co\u00fbt: 11.5", "to": "XT(7499.4)"}, {"arrows": "to", "from": "XT(7499.4)", "label": "64.4", "title": "Co\u00fbt: 64.4", "to": "AC(7563.8)"}, {"arrows": "to", "from": "AC(7563.8)", "label": "39.4", "title": "Co\u00fbt: 39.4", "to": "VX(8422.26)"}, {"arrows": "to", "from": "VX(8422.26)", "label": "38.9", "title": "Co\u00fbt: 38.9", "to": "TM(8461.16)"}, {"arrows": "to", "from": "TM(8461.16)", "label": "23.5", "title": "Co\u00fbt: 23.5", "to": "PV(8484.66)"}, {"arrows": "to", "from": "PV(8484.66)", "label": "6.2", "title": "Co\u00fbt: 6.2", "to": "WX(8490.86)"}, {"arrows": "to", "from": "BP(9906.0)", "label": "49.6", "title": "Co\u00fbt: 49.6", "to": "AE(9955.6)"}, {"arrows": "to", "from": "FM(8548.46)", "label": "99.0", "title": "Co\u00fbt: 99.0", "to": "DR(8647.46)"}, {"arrows": "to", "from": "DR(8647.46)", "label": "12.0", "title": "Co\u00fbt: 12.0", "to": "PG(8659.46)"}, {"arrows": "to", "from": "PG(8659.46)", "label": "10.5", "title": "Co\u00fbt: 10.5", "to": "DH(8669.96)"}, {"arrows": "to", "from": "DH(8669.96)", "label": "41.5", "title": "Co\u00fbt: 41.5", "to": "MC(8711.46)"}, {"arrows": "to", "from": "MC(8711.46)", "label": "27.3", "title": "Co\u00fbt: 27.3", "to": "LI(8738.76)"}, {"arrows": "to", "from": "LI(8738.76)", "label": "34.0", "title": "Co\u00fbt: 34.0", "to": "HC(9786.0)"}, {"arrows": "to", "from": "HC(9786.0)", "label": "36.5", "title": "Co\u00fbt: 36.5", "to": "UH(9822.5)"}, {"arrows": "to", "from": "UH(9822.5)", "label": "11.6", "title": "Co\u00fbt: 11.6", "to": "DQ(9834.1)"}, {"arrows": "to", "from": "DQ(9834.1)", "label": "71.9", "title": "Co\u00fbt: 71.9", "to": "BP(9906.0)"}, {"arrows": "to", "from": "NO(11887.2)", "label": "32.5", "title": "Co\u00fbt: 32.5", "to": "HY(11919.7)"}, {"arrows": "to", "from": "AE(9955.6)", "label": "34.7", "title": "Co\u00fbt: 34.7", "to": "TN(9990.3)"}, {"arrows": "to", "from": "TN(9990.3)", "label": "12.8", "title": "Co\u00fbt: 12.8", "to": "MV(10003.1)"}, {"arrows": "to", "from": "MV(10003.1)", "label": "41.4", "title": "Co\u00fbt: 41.4", "to": "XX(10044.5)"}, {"arrows": "to", "from": "XX(10044.5)", "label": "84.2", "title": "Co\u00fbt: 84.2", "to": "ON(10128.7)"}, {"arrows": "to", "from": "ON(10128.7)", "label": "19.2", "title": "Co\u00fbt: 19.2", "to": "RC(10147.9)"}, {"arrows": "to", "from": "RC(10147.9)", "label": "28.1", "title": "Co\u00fbt: 28.1", "to": "WD(11728.7)"}, {"arrows": "to", "from": "WD(11728.7)", "label": "29.2", "title": "Co\u00fbt: 29.2", "to": "YK(11757.9)"}, {"arrows": "to", "from": "YK(11757.9)", "label": "61.2", "title": "Co\u00fbt: 61.2", "to": "KI(11819.1)"}, {"arrows": "to", "from": "KI(11819.1)", "label": "24.1", "title": "Co\u00fbt: 24.1", "to": "VJ(11843.2)"}, {"arrows": "to", "from": "VJ(11843.2)", "label": "14.4", "title": "Co\u00fbt: 14.4", "to": "UJ(11857.6)"}, {"arrows": "to", "from": "UJ(11857.6)", "label": "21.7", "title": "Co\u00fbt: 21.7", "to": "TX(11879.3)"}, {"arrows": "to", "from": "TX(11879.3)", "label": "7.9", "title": "Co\u00fbt: 7.9", "to": "NO(11887.2)"}, {"arrows": "to", "from": "PQ(14859.0)", "label": "71.5", "title": "Co\u00fbt: 71.5", "to": "SK(14930.5)"}, {"arrows": "to", "from": "HY(11919.7)", "label": "11.5", "title": "Co\u00fbt: 11.5", "to": "GR(11931.2)"}, {"arrows": "to", "from": "GR(11931.2)", "label": "29.0", "title": "Co\u00fbt: 29.0", "to": "NQ(11960.2)"}, {"arrows": "to", "from": "NQ(11960.2)", "label": "57.3", "title": "Co\u00fbt: 57.3", "to": "UW(14760.5)"}, {"arrows": "to", "from": "UW(14760.5)", "label": "70.1", "title": "Co\u00fbt: 70.1", "to": "SA(14830.6)"}, {"arrows": "to", "from": "SA(14830.6)", "label": "20.4", "title": "Co\u00fbt: 20.4", "to": "IB(14851.0)"}, {"arrows": "to", "from": "IB(14851.0)", "label": "8.0", "title": "Co\u00fbt: 8.0", "to": "PQ(14859.0)"}, {"arrows": "to", "from": "SK(14930.5)", "label": "67.7", "title": "Co\u00fbt: 67.7", "to": "NW(14998.2)"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"physics": {"enabled": true, "stabilization": {"iterations": 200}}, "interaction": {"dragNodes": true}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>

@@ -1,0 +1,222 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 600px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+             #loadingBar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width: 100%;
+                 height: 600px;
+                 background-color:rgba(200,200,200,0.8);
+                 -webkit-transition: all 0.5s ease;
+                 -moz-transition: all 0.5s ease;
+                 -ms-transition: all 0.5s ease;
+                 -o-transition: all 0.5s ease;
+                 transition: all 0.5s ease;
+                 opacity:1;
+             }
+
+             #bar {
+                 position:absolute;
+                 top:0px;
+                 left:0px;
+                 width:20px;
+                 height:20px;
+                 margin:auto auto auto auto;
+                 border-radius:11px;
+                 border:2px solid rgba(30,30,30,0.05);
+                 background: rgb(0, 173, 246); /* Old browsers */
+                 box-shadow: 2px 0px 4px rgba(0,0,0,0.4);
+             }
+
+             #border {
+                 position:absolute;
+                 top:10px;
+                 left:10px;
+                 width:500px;
+                 height:23px;
+                 margin:auto auto auto auto;
+                 box-shadow: 0px 0px 4px rgba(0,0,0,0.2);
+                 border-radius:10px;
+             }
+
+             #text {
+                 position:absolute;
+                 top:8px;
+                 left:530px;
+                 width:30px;
+                 height:50px;
+                 margin:auto auto auto auto;
+                 font-size:22px;
+                 color: #000000;
+             }
+
+             div.outerBorder {
+                 position:relative;
+                 top:400px;
+                 width:600px;
+                 height:44px;
+                 margin:auto auto auto auto;
+                 border:8px solid rgba(0,0,0,0.1);
+                 background: rgb(252,252,252); /* Old browsers */
+                 background: -moz-linear-gradient(top,  rgba(252,252,252,1) 0%, rgba(237,237,237,1) 100%); /* FF3.6+ */
+                 background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(252,252,252,1)), color-stop(100%,rgba(237,237,237,1))); /* Chrome,Safari4+ */
+                 background: -webkit-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Chrome10+,Safari5.1+ */
+                 background: -o-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* Opera 11.10+ */
+                 background: -ms-linear-gradient(top,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* IE10+ */
+                 background: linear-gradient(to bottom,  rgba(252,252,252,1) 0%,rgba(237,237,237,1) 100%); /* W3C */
+                 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#ededed',GradientType=0 ); /* IE6-9 */
+                 border-radius:72px;
+                 box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+             }
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+            <div id="loadingBar">
+              <div class="outerBorder">
+                <div id="text">0%</div>
+                <div id="border">
+                  <div id="bar"></div>
+                </div>
+              </div>
+            </div>
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#97c2fc", "id": "TH(2509.4)", "label": "TH(2509.4)", "shape": "dot"}, {"color": "#97c2fc", "id": "IW(2539.1)", "label": "IW(2539.1)", "shape": "dot"}, {"color": "#97c2fc", "id": "LG(1557.8)", "label": "LG(1557.8)", "shape": "dot"}, {"color": "#97c2fc", "id": "CP(1729.5)", "label": "CP(1729.5)", "shape": "dot"}, {"color": "#97c2fc", "id": "DN(1729.5)", "label": "DN(1729.5)", "shape": "dot"}, {"color": "#97c2fc", "id": "DQ(1808.3)", "label": "DQ(1808.3)", "shape": "dot"}, {"color": "#97c2fc", "id": "YH(1852.1)", "label": "YH(1852.1)", "shape": "dot"}, {"color": "#97c2fc", "id": "BA(1883.2)", "label": "BA(1883.2)", "shape": "dot"}, {"color": "#97c2fc", "id": "HN(1986.6)", "label": "HN(1986.6)", "shape": "dot"}, {"color": "#97c2fc", "id": "VA(2104.3)", "label": "VA(2104.3)", "shape": "dot"}, {"color": "#97c2fc", "id": "NL(2212.0)", "label": "NL(2212.0)", "shape": "dot"}, {"color": "#97c2fc", "id": "DJ(2248.8)", "label": "DJ(2248.8)", "shape": "dot"}, {"color": "#97c2fc", "id": "UR(2310.5)", "label": "UR(2310.5)", "shape": "dot"}, {"color": "#97c2fc", "id": "ZE(2361.3)", "label": "ZE(2361.3)", "shape": "dot"}, {"color": "#97c2fc", "id": "CG(2409.7)", "label": "CG(2409.7)", "shape": "dot"}, {"color": "#97c2fc", "id": "UW(2481.4)", "label": "UW(2481.4)", "shape": "dot"}, {"color": "#97c2fc", "id": "XB(2941.7)", "label": "XB(2941.7)", "shape": "dot"}, {"color": "#97c2fc", "id": "CW(2987.5)", "label": "CW(2987.5)", "shape": "dot"}, {"color": "#97c2fc", "id": "MR(2611.6)", "label": "MR(2611.6)", "shape": "dot"}, {"color": "#97c2fc", "id": "KP(2691.8)", "label": "KP(2691.8)", "shape": "dot"}, {"color": "#97c2fc", "id": "IJ(2757.5)", "label": "IJ(2757.5)", "shape": "dot"}, {"color": "#97c2fc", "id": "SC(2782.3)", "label": "SC(2782.3)", "shape": "dot"}, {"color": "#97c2fc", "id": "GU(2845.3)", "label": "GU(2845.3)", "shape": "dot"}, {"color": "#97c2fc", "id": "KN(2891.5)", "label": "KN(2891.5)", "shape": "dot"}, {"color": "#97c2fc", "id": "BP(5270.0)", "label": "BP(5270.0)", "shape": "dot"}, {"color": "#97c2fc", "id": "KU(5315.1)", "label": "KU(5315.1)", "shape": "dot"}, {"color": "#97c2fc", "id": "VW(3013.9)", "label": "VW(3013.9)", "shape": "dot"}, {"color": "#97c2fc", "id": "FH(3068.7)", "label": "FH(3068.7)", "shape": "dot"}, {"color": "#97c2fc", "id": "DL(3085.9)", "label": "DL(3085.9)", "shape": "dot"}, {"color": "#97c2fc", "id": "TK(3097.8)", "label": "TK(3097.8)", "shape": "dot"}, {"color": "#97c2fc", "id": "US(4841.3)", "label": "US(4841.3)", "shape": "dot"}, {"color": "#97c2fc", "id": "MA(4875.0)", "label": "MA(4875.0)", "shape": "dot"}, {"color": "#97c2fc", "id": "QX(5525.3)", "label": "QX(5525.3)", "shape": "dot"}, {"color": "#97c2fc", "id": "UI(5566.9)", "label": "UI(5566.9)", "shape": "dot"}, {"color": "#97c2fc", "id": "GS(5349.8)", "label": "GS(5349.8)", "shape": "dot"}, {"color": "#97c2fc", "id": "NU(5356.7)", "label": "NU(5356.7)", "shape": "dot"}, {"color": "#97c2fc", "id": "PT(5410.7)", "label": "PT(5410.7)", "shape": "dot"}, {"color": "#97c2fc", "id": "YE(5458.2)", "label": "YE(5458.2)", "shape": "dot"}, {"color": "#97c2fc", "id": "IA(5487.8)", "label": "IA(5487.8)", "shape": "dot"}, {"color": "#97c2fc", "id": "EO(5500.6)", "label": "EO(5500.6)", "shape": "dot"}, {"color": "#97c2fc", "id": "KG(7360.2)", "label": "KG(7360.2)", "shape": "dot"}, {"color": "#97c2fc", "id": "PX(7403.1)", "label": "PX(7403.1)", "shape": "dot"}, {"color": "#97c2fc", "id": "CO(5612.0)", "label": "CO(5612.0)", "shape": "dot"}, {"color": "#97c2fc", "id": "MW(5652.3)", "label": "MW(5652.3)", "shape": "dot"}, {"color": "#97c2fc", "id": "KM(5664.9)", "label": "KM(5664.9)", "shape": "dot"}, {"color": "#97c2fc", "id": "GN(5708.2)", "label": "GN(5708.2)", "shape": "dot"}, {"color": "#97c2fc", "id": "TC(5732.9)", "label": "TC(5732.9)", "shape": "dot"}, {"color": "#97c2fc", "id": "CA(5736.8)", "label": "CA(5736.8)", "shape": "dot"}, {"color": "#97c2fc", "id": "KJ(5790.1)", "label": "KJ(5790.1)", "shape": "dot"}, {"color": "#97c2fc", "id": "UJ(5844.3)", "label": "UJ(5844.3)", "shape": "dot"}, {"color": "#97c2fc", "id": "LD(5909.4)", "label": "LD(5909.4)", "shape": "dot"}, {"color": "#97c2fc", "id": "NE(7070.0)", "label": "NE(7070.0)", "shape": "dot"}, {"color": "#97c2fc", "id": "AF(7200.8)", "label": "AF(7200.8)", "shape": "dot"}, {"color": "#97c2fc", "id": "KA(7222.6)", "label": "KA(7222.6)", "shape": "dot"}, {"color": "#97c2fc", "id": "BT(7257.4)", "label": "BT(7257.4)", "shape": "dot"}, {"color": "#97c2fc", "id": "BG(7340.0)", "label": "BG(7340.0)", "shape": "dot"}, {"color": "#97c2fc", "id": "WJ(8432.06)", "label": "WJ(8432.06)", "shape": "dot"}, {"color": "#97c2fc", "id": "AD(8470.46)", "label": "AD(8470.46)", "shape": "dot"}, {"color": "#97c2fc", "id": "YY(7409.1)", "label": "YY(7409.1)", "shape": "dot"}, {"color": "#97c2fc", "id": "UU(7453.0)", "label": "UU(7453.0)", "shape": "dot"}, {"color": "#97c2fc", "id": "SD(7459.2)", "label": "SD(7459.2)", "shape": "dot"}, {"color": "#97c2fc", "id": "ZB(7560.1)", "label": "ZB(7560.1)", "shape": "dot"}, {"color": "#97c2fc", "id": "BE(7603.4)", "label": "BE(7603.4)", "shape": "dot"}, {"color": "#97c2fc", "id": "PB(7626.6)", "label": "PB(7626.6)", "shape": "dot"}, {"color": "#97c2fc", "id": "HR(8384.16)", "label": "HR(8384.16)", "shape": "dot"}, {"color": "#97c2fc", "id": "YJ(10238.93)", "label": "YJ(10238.93)", "shape": "dot"}, {"color": "#97c2fc", "id": "SQ(10290.13)", "label": "SQ(10290.13)", "shape": "dot"}, {"color": "#97c2fc", "id": "EC(8492.26)", "label": "EC(8492.26)", "shape": "dot"}, {"color": "#97c2fc", "id": "QO(8503.26)", "label": "QO(8503.26)", "shape": "dot"}, {"color": "#97c2fc", "id": "UN(8520.26)", "label": "UN(8520.26)", "shape": "dot"}, {"color": "#97c2fc", "id": "TY(8545.06)", "label": "TY(8545.06)", "shape": "dot"}, {"color": "#97c2fc", "id": "EX(8563.46)", "label": "EX(8563.46)", "shape": "dot"}, {"color": "#97c2fc", "id": "RG(8590.76)", "label": "RG(8590.76)", "shape": "dot"}, {"color": "#97c2fc", "id": "VC(8623.96)", "label": "VC(8623.96)", "shape": "dot"}, {"color": "#97c2fc", "id": "ZU(10098.93)", "label": "ZU(10098.93)", "shape": "dot"}, {"color": "#97c2fc", "id": "BZ(10140.03)", "label": "BZ(10140.03)", "shape": "dot"}, {"color": "#97c2fc", "id": "EH(10161.33)", "label": "EH(10161.33)", "shape": "dot"}, {"color": "#97c2fc", "id": "EY(10179.03)", "label": "EY(10179.03)", "shape": "dot"}, {"color": "#97c2fc", "id": "HW(13031.36)", "label": "HW(13031.36)", "shape": "dot"}, {"color": "#97c2fc", "id": "JM(13105.16)", "label": "JM(13105.16)", "shape": "dot"}, {"color": "#97c2fc", "id": "ZP(10330.33)", "label": "ZP(10330.33)", "shape": "dot"}, {"color": "#97c2fc", "id": "XD(10410.53)", "label": "XD(10410.53)", "shape": "dot"}, {"color": "#97c2fc", "id": "HB(10491.03)", "label": "HB(10491.03)", "shape": "dot"}, {"color": "#97c2fc", "id": "CM(10581.03)", "label": "CM(10581.03)", "shape": "dot"}, {"color": "#97c2fc", "id": "SI(10603.23)", "label": "SI(10603.23)", "shape": "dot"}, {"color": "#97c2fc", "id": "IP(10623.13)", "label": "IP(10623.13)", "shape": "dot"}, {"color": "#97c2fc", "id": "FF(10660.63)", "label": "FF(10660.63)", "shape": "dot"}, {"color": "#97c2fc", "id": "HG(12940.06)", "label": "HG(12940.06)", "shape": "dot"}, {"color": "#97c2fc", "id": "MO(12959.16)", "label": "MO(12959.16)", "shape": "dot"}, {"color": "#97c2fc", "id": "YN(12981.76)", "label": "YN(12981.76)", "shape": "dot"}, {"color": "#97c2fc", "id": "TQ(13265.46)", "label": "TQ(13265.46)", "shape": "dot"}, {"color": "#97c2fc", "id": "CK(13410.06)", "label": "CK(13410.06)", "shape": "dot"}, {"color": "#97c2fc", "id": "JH(17023.96)", "label": "JH(17023.96)", "shape": "dot"}, {"color": "#97c2fc", "id": "BY(17068.46)", "label": "BY(17068.46)", "shape": "dot"}, {"color": "#97c2fc", "id": "IM(13426.36)", "label": "IM(13426.36)", "shape": "dot"}, {"color": "#97c2fc", "id": "QE(13465.56)", "label": "QE(13465.56)", "shape": "dot"}, {"color": "#97c2fc", "id": "LY(13522.26)", "label": "LY(13522.26)", "shape": "dot"}, {"color": "#97c2fc", "id": "PS(13547.66)", "label": "PS(13547.66)", "shape": "dot"}, {"color": "#97c2fc", "id": "LK(13603.36)", "label": "LK(13603.36)", "shape": "dot"}, {"color": "#97c2fc", "id": "MQ(16900.66)", "label": "MQ(16900.66)", "shape": "dot"}, {"color": "#97c2fc", "id": "RA(16910.16)", "label": "RA(16910.16)", "shape": "dot"}, {"color": "#97c2fc", "id": "LB(16940.36)", "label": "LB(16940.36)", "shape": "dot"}, {"color": "#97c2fc", "id": "SF(16986.96)", "label": "SF(16986.96)", "shape": "dot"}, {"color": "#97c2fc", "id": "NR(17151.66)", "label": "NR(17151.66)", "shape": "dot"}, {"color": "#97c2fc", "id": "QM(17223.86)", "label": "QM(17223.86)", "shape": "dot"}, {"color": "#97c2fc", "id": "AG(17289.16)", "label": "AG(17289.16)", "shape": "dot"}, {"color": "#97c2fc", "id": "HT(17378.76)", "label": "HT(17378.76)", "shape": "dot"}, {"color": "#97c2fc", "id": "GP(17414.26)", "label": "GP(17414.26)", "shape": "dot"}, {"color": "#97c2fc", "id": "NM(17468.76)", "label": "NM(17468.76)", "shape": "dot"}, {"color": "#97c2fc", "id": "WS(17475.36)", "label": "WS(17475.36)", "shape": "dot"}, {"color": "#97c2fc", "id": "YR(17495.26)", "label": "YR(17495.26)", "shape": "dot"}, {"color": "#97c2fc", "id": "HO(17506.16)", "label": "HO(17506.16)", "shape": "dot"}, {"color": "#97c2fc", "id": "GB(17521.86)", "label": "GB(17521.86)", "shape": "dot"}, {"color": "#97c2fc", "id": "PJ(17741.42)", "label": "PJ(17741.42)", "shape": "dot"}, {"color": "#97c2fc", "id": "GW(17751.72)", "label": "GW(17751.72)", "shape": "dot"}, {"color": "#97c2fc", "id": "RY(17758.02)", "label": "RY(17758.02)", "shape": "dot"}, {"color": "#97c2fc", "id": "FY(17820.82)", "label": "FY(17820.82)", "shape": "dot"}, {"color": "#97c2fc", "id": "TG(17918.12)", "label": "TG(17918.12)", "shape": "dot"}]);
+                  edges = new vis.DataSet([{"arrows": "to", "from": "TH(2509.4)", "label": "29.7", "title": "Co\u00fbt: 29.7", "to": "IW(2539.1)"}, {"arrows": "to", "from": "LG(1557.8)", "label": "171.7", "title": "Co\u00fbt: 171.7", "to": "CP(1729.5)"}, {"arrows": "to", "from": "CP(1729.5)", "label": "0.0", "title": "Co\u00fbt: 0.0", "to": "DN(1729.5)"}, {"arrows": "to", "from": "DN(1729.5)", "label": "78.8", "title": "Co\u00fbt: 78.8", "to": "DQ(1808.3)"}, {"arrows": "to", "from": "DQ(1808.3)", "label": "43.8", "title": "Co\u00fbt: 43.8", "to": "YH(1852.1)"}, {"arrows": "to", "from": "YH(1852.1)", "label": "31.1", "title": "Co\u00fbt: 31.1", "to": "BA(1883.2)"}, {"arrows": "to", "from": "BA(1883.2)", "label": "103.4", "title": "Co\u00fbt: 103.4", "to": "HN(1986.6)"}, {"arrows": "to", "from": "HN(1986.6)", "label": "117.7", "title": "Co\u00fbt: 117.7", "to": "VA(2104.3)"}, {"arrows": "to", "from": "VA(2104.3)", "label": "107.7", "title": "Co\u00fbt: 107.7", "to": "NL(2212.0)"}, {"arrows": "to", "from": "NL(2212.0)", "label": "36.8", "title": "Co\u00fbt: 36.8", "to": "DJ(2248.8)"}, {"arrows": "to", "from": "DJ(2248.8)", "label": "61.7", "title": "Co\u00fbt: 61.7", "to": "UR(2310.5)"}, {"arrows": "to", "from": "UR(2310.5)", "label": "50.8", "title": "Co\u00fbt: 50.8", "to": "ZE(2361.3)"}, {"arrows": "to", "from": "ZE(2361.3)", "label": "48.4", "title": "Co\u00fbt: 48.4", "to": "CG(2409.7)"}, {"arrows": "to", "from": "CG(2409.7)", "label": "71.7", "title": "Co\u00fbt: 71.7", "to": "UW(2481.4)"}, {"arrows": "to", "from": "UW(2481.4)", "label": "28.0", "title": "Co\u00fbt: 28.0", "to": "TH(2509.4)"}, {"arrows": "to", "from": "XB(2941.7)", "label": "45.8", "title": "Co\u00fbt: 45.8", "to": "CW(2987.5)"}, {"arrows": "to", "from": "IW(2539.1)", "label": "72.5", "title": "Co\u00fbt: 72.5", "to": "MR(2611.6)"}, {"arrows": "to", "from": "MR(2611.6)", "label": "80.2", "title": "Co\u00fbt: 80.2", "to": "KP(2691.8)"}, {"arrows": "to", "from": "KP(2691.8)", "label": "65.7", "title": "Co\u00fbt: 65.7", "to": "IJ(2757.5)"}, {"arrows": "to", "from": "IJ(2757.5)", "label": "24.8", "title": "Co\u00fbt: 24.8", "to": "SC(2782.3)"}, {"arrows": "to", "from": "SC(2782.3)", "label": "63.0", "title": "Co\u00fbt: 63.0", "to": "GU(2845.3)"}, {"arrows": "to", "from": "GU(2845.3)", "label": "46.2", "title": "Co\u00fbt: 46.2", "to": "KN(2891.5)"}, {"arrows": "to", "from": "KN(2891.5)", "label": "50.2", "title": "Co\u00fbt: 50.2", "to": "XB(2941.7)"}, {"arrows": "to", "from": "BP(5270.0)", "label": "45.1", "title": "Co\u00fbt: 45.1", "to": "KU(5315.1)"}, {"arrows": "to", "from": "CW(2987.5)", "label": "26.4", "title": "Co\u00fbt: 26.4", "to": "VW(3013.9)"}, {"arrows": "to", "from": "VW(3013.9)", "label": "54.8", "title": "Co\u00fbt: 54.8", "to": "FH(3068.7)"}, {"arrows": "to", "from": "FH(3068.7)", "label": "17.2", "title": "Co\u00fbt: 17.2", "to": "DL(3085.9)"}, {"arrows": "to", "from": "DL(3085.9)", "label": "11.9", "title": "Co\u00fbt: 11.9", "to": "TK(3097.8)"}, {"arrows": "to", "from": "TK(3097.8)", "label": "77.3", "title": "Co\u00fbt: 77.3", "to": "US(4841.3)"}, {"arrows": "to", "from": "US(4841.3)", "label": "33.7", "title": "Co\u00fbt: 33.7", "to": "MA(4875.0)"}, {"arrows": "to", "from": "MA(4875.0)", "label": "22.5", "title": "Co\u00fbt: 22.5", "to": "BP(5270.0)"}, {"arrows": "to", "from": "QX(5525.3)", "label": "41.6", "title": "Co\u00fbt: 41.6", "to": "UI(5566.9)"}, {"arrows": "to", "from": "KU(5315.1)", "label": "34.7", "title": "Co\u00fbt: 34.7", "to": "GS(5349.8)"}, {"arrows": "to", "from": "GS(5349.8)", "label": "6.9", "title": "Co\u00fbt: 6.9", "to": "NU(5356.7)"}, {"arrows": "to", "from": "NU(5356.7)", "label": "54.0", "title": "Co\u00fbt: 54.0", "to": "PT(5410.7)"}, {"arrows": "to", "from": "PT(5410.7)", "label": "47.5", "title": "Co\u00fbt: 47.5", "to": "YE(5458.2)"}, {"arrows": "to", "from": "YE(5458.2)", "label": "29.6", "title": "Co\u00fbt: 29.6", "to": "IA(5487.8)"}, {"arrows": "to", "from": "IA(5487.8)", "label": "12.8", "title": "Co\u00fbt: 12.8", "to": "EO(5500.6)"}, {"arrows": "to", "from": "EO(5500.6)", "label": "24.7", "title": "Co\u00fbt: 24.7", "to": "QX(5525.3)"}, {"arrows": "to", "from": "KG(7360.2)", "label": "42.9", "title": "Co\u00fbt: 42.9", "to": "PX(7403.1)"}, {"arrows": "to", "from": "UI(5566.9)", "label": "45.1", "title": "Co\u00fbt: 45.1", "to": "CO(5612.0)"}, {"arrows": "to", "from": "CO(5612.0)", "label": "40.3", "title": "Co\u00fbt: 40.3", "to": "MW(5652.3)"}, {"arrows": "to", "from": "MW(5652.3)", "label": "12.6", "title": "Co\u00fbt: 12.6", "to": "KM(5664.9)"}, {"arrows": "to", "from": "KM(5664.9)", "label": "43.3", "title": "Co\u00fbt: 43.3", "to": "GN(5708.2)"}, {"arrows": "to", "from": "GN(5708.2)", "label": "24.7", "title": "Co\u00fbt: 24.7", "to": "TC(5732.9)"}, {"arrows": "to", "from": "TC(5732.9)", "label": "3.9", "title": "Co\u00fbt: 3.9", "to": "CA(5736.8)"}, {"arrows": "to", "from": "CA(5736.8)", "label": "53.3", "title": "Co\u00fbt: 53.3", "to": "KJ(5790.1)"}, {"arrows": "to", "from": "KJ(5790.1)", "label": "54.2", "title": "Co\u00fbt: 54.2", "to": "UJ(5844.3)"}, {"arrows": "to", "from": "UJ(5844.3)", "label": "65.1", "title": "Co\u00fbt: 65.1", "to": "LD(5909.4)"}, {"arrows": "to", "from": "LD(5909.4)", "label": "74.2", "title": "Co\u00fbt: 74.2", "to": "NE(7070.0)"}, {"arrows": "to", "from": "NE(7070.0)", "label": "130.8", "title": "Co\u00fbt: 130.8", "to": "AF(7200.8)"}, {"arrows": "to", "from": "AF(7200.8)", "label": "21.8", "title": "Co\u00fbt: 21.8", "to": "KA(7222.6)"}, {"arrows": "to", "from": "KA(7222.6)", "label": "34.8", "title": "Co\u00fbt: 34.8", "to": "BT(7257.4)"}, {"arrows": "to", "from": "BT(7257.4)", "label": "82.6", "title": "Co\u00fbt: 82.6", "to": "BG(7340.0)"}, {"arrows": "to", "from": "BG(7340.0)", "label": "20.2", "title": "Co\u00fbt: 20.2", "to": "KG(7360.2)"}, {"arrows": "to", "from": "WJ(8432.06)", "label": "38.4", "title": "Co\u00fbt: 38.4", "to": "AD(8470.46)"}, {"arrows": "to", "from": "PX(7403.1)", "label": "6.0", "title": "Co\u00fbt: 6.0", "to": "YY(7409.1)"}, {"arrows": "to", "from": "YY(7409.1)", "label": "43.9", "title": "Co\u00fbt: 43.9", "to": "UU(7453.0)"}, {"arrows": "to", "from": "UU(7453.0)", "label": "6.2", "title": "Co\u00fbt: 6.2", "to": "SD(7459.2)"}, {"arrows": "to", "from": "SD(7459.2)", "label": "100.9", "title": "Co\u00fbt: 100.9", "to": "ZB(7560.1)"}, {"arrows": "to", "from": "ZB(7560.1)", "label": "43.3", "title": "Co\u00fbt: 43.3", "to": "BE(7603.4)"}, {"arrows": "to", "from": "BE(7603.4)", "label": "23.2", "title": "Co\u00fbt: 23.2", "to": "PB(7626.6)"}, {"arrows": "to", "from": "PB(7626.6)", "label": "13.5", "title": "Co\u00fbt: 13.5", "to": "HR(8384.16)"}, {"arrows": "to", "from": "HR(8384.16)", "label": "47.9", "title": "Co\u00fbt: 47.9", "to": "WJ(8432.06)"}, {"arrows": "to", "from": "YJ(10238.93)", "label": "51.2", "title": "Co\u00fbt: 51.2", "to": "SQ(10290.13)"}, {"arrows": "to", "from": "AD(8470.46)", "label": "21.8", "title": "Co\u00fbt: 21.8", "to": "EC(8492.26)"}, {"arrows": "to", "from": "EC(8492.26)", "label": "11.0", "title": "Co\u00fbt: 11.0", "to": "QO(8503.26)"}, {"arrows": "to", "from": "QO(8503.26)", "label": "17.0", "title": "Co\u00fbt: 17.0", "to": "UN(8520.26)"}, {"arrows": "to", "from": "UN(8520.26)", "label": "24.8", "title": "Co\u00fbt: 24.8", "to": "TY(8545.06)"}, {"arrows": "to", "from": "TY(8545.06)", "label": "18.4", "title": "Co\u00fbt: 18.4", "to": "EX(8563.46)"}, {"arrows": "to", "from": "EX(8563.46)", "label": "27.3", "title": "Co\u00fbt: 27.3", "to": "RG(8590.76)"}, {"arrows": "to", "from": "RG(8590.76)", "label": "33.2", "title": "Co\u00fbt: 33.2", "to": "VC(8623.96)"}, {"arrows": "to", "from": "VC(8623.96)", "label": "40.5", "title": "Co\u00fbt: 40.5", "to": "ZU(10098.93)"}, {"arrows": "to", "from": "ZU(10098.93)", "label": "41.1", "title": "Co\u00fbt: 41.1", "to": "BZ(10140.03)"}, {"arrows": "to", "from": "BZ(10140.03)", "label": "21.3", "title": "Co\u00fbt: 21.3", "to": "EH(10161.33)"}, {"arrows": "to", "from": "EH(10161.33)", "label": "17.7", "title": "Co\u00fbt: 17.7", "to": "EY(10179.03)"}, {"arrows": "to", "from": "EY(10179.03)", "label": "59.9", "title": "Co\u00fbt: 59.9", "to": "YJ(10238.93)"}, {"arrows": "to", "from": "HW(13031.36)", "label": "73.8", "title": "Co\u00fbt: 73.8", "to": "JM(13105.16)"}, {"arrows": "to", "from": "SQ(10290.13)", "label": "40.2", "title": "Co\u00fbt: 40.2", "to": "ZP(10330.33)"}, {"arrows": "to", "from": "ZP(10330.33)", "label": "80.2", "title": "Co\u00fbt: 80.2", "to": "XD(10410.53)"}, {"arrows": "to", "from": "XD(10410.53)", "label": "80.5", "title": "Co\u00fbt: 80.5", "to": "HB(10491.03)"}, {"arrows": "to", "from": "HB(10491.03)", "label": "90.0", "title": "Co\u00fbt: 90.0", "to": "CM(10581.03)"}, {"arrows": "to", "from": "CM(10581.03)", "label": "22.2", "title": "Co\u00fbt: 22.2", "to": "SI(10603.23)"}, {"arrows": "to", "from": "SI(10603.23)", "label": "19.9", "title": "Co\u00fbt: 19.9", "to": "IP(10623.13)"}, {"arrows": "to", "from": "IP(10623.13)", "label": "37.5", "title": "Co\u00fbt: 37.5", "to": "FF(10660.63)"}, {"arrows": "to", "from": "FF(10660.63)", "label": "9.2", "title": "Co\u00fbt: 9.2", "to": "HG(12940.06)"}, {"arrows": "to", "from": "HG(12940.06)", "label": "19.1", "title": "Co\u00fbt: 19.1", "to": "MO(12959.16)"}, {"arrows": "to", "from": "MO(12959.16)", "label": "22.6", "title": "Co\u00fbt: 22.6", "to": "YN(12981.76)"}, {"arrows": "to", "from": "YN(12981.76)", "label": "49.6", "title": "Co\u00fbt: 49.6", "to": "HW(13031.36)"}, {"arrows": "to", "from": "TQ(13265.46)", "label": "144.6", "title": "Co\u00fbt: 144.6", "to": "CK(13410.06)"}, {"arrows": "to", "from": "JM(13105.16)", "label": "160.3", "title": "Co\u00fbt: 160.3", "to": "TQ(13265.46)"}, {"arrows": "to", "from": "JH(17023.96)", "label": "44.5", "title": "Co\u00fbt: 44.5", "to": "BY(17068.46)"}, {"arrows": "to", "from": "CK(13410.06)", "label": "16.3", "title": "Co\u00fbt: 16.3", "to": "IM(13426.36)"}, {"arrows": "to", "from": "IM(13426.36)", "label": "39.2", "title": "Co\u00fbt: 39.2", "to": "QE(13465.56)"}, {"arrows": "to", "from": "QE(13465.56)", "label": "56.7", "title": "Co\u00fbt: 56.7", "to": "LY(13522.26)"}, {"arrows": "to", "from": "LY(13522.26)", "label": "25.4", "title": "Co\u00fbt: 25.4", "to": "PS(13547.66)"}, {"arrows": "to", "from": "PS(13547.66)", "label": "55.7", "title": "Co\u00fbt: 55.7", "to": "LK(13603.36)"}, {"arrows": "to", "from": "LK(13603.36)", "label": "18.8", "title": "Co\u00fbt: 18.8", "to": "MQ(16900.66)"}, {"arrows": "to", "from": "MQ(16900.66)", "label": "9.5", "title": "Co\u00fbt: 9.5", "to": "RA(16910.16)"}, {"arrows": "to", "from": "RA(16910.16)", "label": "30.2", "title": "Co\u00fbt: 30.2", "to": "LB(16940.36)"}, {"arrows": "to", "from": "LB(16940.36)", "label": "46.6", "title": "Co\u00fbt: 46.6", "to": "SF(16986.96)"}, {"arrows": "to", "from": "SF(16986.96)", "label": "37.0", "title": "Co\u00fbt: 37.0", "to": "JH(17023.96)"}, {"arrows": "to", "from": "BY(17068.46)", "label": "83.2", "title": "Co\u00fbt: 83.2", "to": "NR(17151.66)"}, {"arrows": "to", "from": "NR(17151.66)", "label": "72.2", "title": "Co\u00fbt: 72.2", "to": "QM(17223.86)"}, {"arrows": "to", "from": "QM(17223.86)", "label": "65.3", "title": "Co\u00fbt: 65.3", "to": "AG(17289.16)"}, {"arrows": "to", "from": "AG(17289.16)", "label": "89.6", "title": "Co\u00fbt: 89.6", "to": "HT(17378.76)"}, {"arrows": "to", "from": "HT(17378.76)", "label": "35.5", "title": "Co\u00fbt: 35.5", "to": "GP(17414.26)"}, {"arrows": "to", "from": "GP(17414.26)", "label": "54.5", "title": "Co\u00fbt: 54.5", "to": "NM(17468.76)"}, {"arrows": "to", "from": "NM(17468.76)", "label": "6.6", "title": "Co\u00fbt: 6.6", "to": "WS(17475.36)"}, {"arrows": "to", "from": "WS(17475.36)", "label": "19.9", "title": "Co\u00fbt: 19.9", "to": "YR(17495.26)"}, {"arrows": "to", "from": "YR(17495.26)", "label": "10.9", "title": "Co\u00fbt: 10.9", "to": "HO(17506.16)"}, {"arrows": "to", "from": "HO(17506.16)", "label": "15.7", "title": "Co\u00fbt: 15.7", "to": "GB(17521.86)"}, {"arrows": "to", "from": "GB(17521.86)", "label": "80.9", "title": "Co\u00fbt: 80.9", "to": "PJ(17741.42)"}, {"arrows": "to", "from": "PJ(17741.42)", "label": "10.3", "title": "Co\u00fbt: 10.3", "to": "GW(17751.72)"}, {"arrows": "to", "from": "GW(17751.72)", "label": "6.3", "title": "Co\u00fbt: 6.3", "to": "RY(17758.02)"}, {"arrows": "to", "from": "RY(17758.02)", "label": "62.8", "title": "Co\u00fbt: 62.8", "to": "FY(17820.82)"}, {"arrows": "to", "from": "FY(17820.82)", "label": "97.3", "title": "Co\u00fbt: 97.3", "to": "TG(17918.12)"}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"physics": {"enabled": true, "stabilization": {"iterations": 200}}, "interaction": {"dragNodes": true}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+                      network.on("stabilizationProgress", function(params) {
+                          document.getElementById('loadingBar').removeAttribute("style");
+                          var maxWidth = 496;
+                          var minWidth = 20;
+                          var widthFactor = params.iterations/params.total;
+                          var width = Math.max(minWidth,maxWidth * widthFactor);
+                          document.getElementById('bar').style.width = width + 'px';
+                          document.getElementById('text').innerHTML = Math.round(widthFactor*100) + '%';
+                      });
+                      network.once("stabilizationIterationsDone", function() {
+                          document.getElementById('text').innerHTML = '100%';
+                          document.getElementById('bar').style.width = '496px';
+                          document.getElementById('loadingBar').style.opacity = 0;
+                          // really clean the dom element
+                          setTimeout(function () {document.getElementById('loadingBar').style.display = 'none';}, 500);
+                      });
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
