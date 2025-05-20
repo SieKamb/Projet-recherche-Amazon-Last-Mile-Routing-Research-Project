@@ -152,9 +152,10 @@ for i in range(1, len(ordre_passage)):
     if len(V) != 1:
         x,t = None,None
         s = 4
+        pas = 0.7
         while x is None and s > 0:
             x,t = resolution(V, E, p, a, b, M, v0, current_vf, seuil=s)
-            s -= 0.7
+            s -= pas
         if x is None:
             x,t = resolution(V, E, p, a, b, M, v0, current_vf)
         if x is None:
